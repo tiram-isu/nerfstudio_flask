@@ -1,28 +1,11 @@
 import subprocess
 import re
 
-checkpoint_path = "nerfstudio_output/trained_model/colmap_data/splatfacto/2024-12-01_175414/config.yml"
-output_path = "renders/"
-
-
-def run_nerfstudio():
-    commands = f'conda activate nerfstudio && \
-    cd D:/Thesis/Stonehenge_new/stonehenge/ && \
-    ns-export gaussian-splat --load-config {checkpoint_path} --output-dir {output_path}'
-
-    try:
-        subprocess.run(commands, shell=True, check=True)  # Use cmd.exe for Windows
-        print("Export completed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred during export: {e}")
-
-    #ns-render camera-path
-    # --load-config nerfstudio_output\trained_model\colmap_data\splatfacto\2024-12-01_175414\config.yml
-    # --camera-path-filename D:\Thesis\Stonehenge_new\stonehenge\colmap_data\camera_paths\PDST.json
-    # --output-path renders/colmap_data/PDST.mp4
-
 def render_camera_path(path, nerfstudio_paths):
-    # extract path name without extension
+    """
+    Render camera path using Nerfstudio.
+    Requires conda environment "nerfstudio" with Nerfstudio installed.
+    """
     pattern = r"([^/]+)(?=\.json$)"
     match = re.search(pattern, path)
 

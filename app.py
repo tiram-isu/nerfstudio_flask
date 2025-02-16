@@ -1,40 +1,13 @@
 from flask import Flask, request, jsonify
-from nerfstudio_commands import run_nerfstudio, render_camera_path
+from nerfstudio_commands import render_camera_path
+
 app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Hello World!"
-
-@app.route('/api/test', methods=['GET'])
-def test_route():
-    return jsonify({"message": "Test erfolgreich!"}), 200
-
-@app.route('/api/status', methods=['POST'])
-def handle_status():
-    """
-    Empfängt den Status vom Backend und führt Aktionen basierend darauf aus.
-    """
-    try:
-        data = request.get_json()
-        status = data.get("status")
-        message = data.get("message")
-        
-        print(f"Empfangene Daten: {data}")
-        if status == "completed":
-            run_nerfstudio()
-            return jsonify({"success": True, "message": "Aktion wurde ausgeführt."}), 200
-        elif status == "error":
-            print(f"Fehler empfangen: {message}")
-            return jsonify({"success": False, "message": "Fehler wurde verarbeitet."}), 200
-        else:
-            return jsonify({"success": False, "message": "Unbekannter Status."}), 400
-    except Exception as e:
-        print(f"Fehler bei der Verarbeitung der Anfrage: {e}")
-        return jsonify({"success": False, "message": "Fehler bei der Anfrage-Verarbeitung."}), 500
 
 @app.route('/api/path_render', methods=['POST'])
 def handle_path_render():
+    """
+    Get data from POST request and render camera path using Nerfstudio.
+    """
     try:
         data = request.get_json()
         path = data.get("path")
